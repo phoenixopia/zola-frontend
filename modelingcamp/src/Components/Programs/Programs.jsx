@@ -1,6 +1,48 @@
-import React from "react";
+import { useState } from "react";
+import axios from "axios";
+
 
 const Programs = () => {
+
+  const [formData, setFormData] = useState({
+    fullName: "",
+    email: "",
+    phone: "",
+    dateOfBirth: "",
+    instagram: "",
+    gender: "",
+    goals: "",
+  });
+
+  const [message, setMessage] = useState("");
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await axios.post("http://localhost:5000/api/consultations", formData);
+      setMessage("Submitted successfully!");
+      setFormData({
+        fullName: "",
+        email: "",
+        phone: "",
+        dateOfBirth: "",
+        instagram: "",
+        gender: "",
+        goals: "",
+      });
+    } catch (err) {
+      console.error(err);      
+      console.log(err);
+      setMessage("Submission failed. Try again.");
+    }
+  };
+
+
+
   return (
     <div id="programs" className="max-w-6xl mx-auto px-4 py-12">
       <h2 className="text-3xl font-bold text-center mb-10">Our Modeling Programs</h2>
@@ -33,113 +75,133 @@ const Programs = () => {
 
       {/* Consultation Form */}
       <div className="bg-gray-100 rounded-2xl p-8 shadow-lg">
-        <h2 className="text-2xl font-semibold text-center mb-6">
-          Fill out the form below for a free 1:1 consultation to see if you're a good fit
-        </h2>
+      <h2 className="text-2xl font-semibold text-center mb-6">
+        Fill out the form below for a free 1:1 consultation to see if you're a good fit
+      </h2>
 
-        <form className="space-y-6 max-w-xl mx-auto">
-          {/* Full Name */}
-          <div>
-            <label className="block text-gray-700 font-medium mb-1" htmlFor="name">
-              Full Name
-            </label>
-            <input
-              id="name"
-              type="text"
-              className="w-full px-4 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-black outline-none"
-              placeholder="Your name"
-            />
-          </div>
+      {message && (
+        <div className="text-center mb-4 text-green-600 font-semibold">{message}</div>
+      )}
 
-          {/* Email */}
-          <div>
-            <label className="block text-gray-700 font-medium mb-1" htmlFor="email">
-              Email Address
-            </label>
-            <input
-              id="email"
-              type="email"
-              className="w-full px-4 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-black outline-none"
-              placeholder="you@example.com"
-            />
-          </div>
+      <form className="space-y-6 max-w-xl mx-auto" onSubmit={handleSubmit}>
+        {/* Full Name */}
+        <div>
+          <label htmlFor="fullName" className="block text-gray-700 font-medium mb-1">
+            Full Name
+          </label>
+          <input
+            id="fullName"
+            type="text"
+            value={formData.fullName}
+            onChange={handleChange}
+            className="w-full px-4 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-black outline-none"
+            placeholder="Your name"
+            required
+          />
+        </div>
 
-          {/* Phone Number */}
-          <div>
-            <label className="block text-gray-700 font-medium mb-1" htmlFor="phone">
-              Phone Number
-            </label>
-            <input
-              id="phone"
-              type="tel"
-              className="w-full px-4 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-black outline-none"
-              placeholder="+251948877456"
-            />
-          </div>
+        {/* Email */}
+        <div>
+          <label htmlFor="email" className="block text-gray-700 font-medium mb-1">
+            Email Address
+          </label>
+          <input
+            id="email"
+            type="email"
+            value={formData.email}
+            onChange={handleChange}
+            className="w-full px-4 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-black outline-none"
+            placeholder="you@example.com"
+            required
+          />
+        </div>
 
-          {/* Date of Birth */}
-          <div>
-            <label className="block text-gray-700 font-medium mb-1" htmlFor="dob">
-              Date of Birth
-            </label>
-            <input
-              id="dob"
-              type="date"
-              className="w-full px-4 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-black outline-none"
-            />
-          </div>
+        {/* Phone */}
+        <div>
+          <label htmlFor="phone" className="block text-gray-700 font-medium mb-1">
+            Phone Number
+          </label>
+          <input
+            id="phone"
+            type="tel"
+            value={formData.phone}
+            onChange={handleChange}
+            className="w-full px-4 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-black outline-none"
+            placeholder="+251948877456"
+          />
+        </div>
 
-          {/* Instagram Username */}
-          <div>
-            <label className="block text-gray-700 font-medium mb-1" htmlFor="instagram">
-              Instagram Username
-            </label>
-            <input
-              id="instagram"
-              type="text"
-              className="w-full px-4 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-black outline-none"
-              placeholder="@yourusername"
-            />
-          </div>
+        {/* Date of Birth */}
+        <div>
+          <label htmlFor="dateOfBirth" className="block text-gray-700 font-medium mb-1">
+            Date of Birth
+          </label>
+          <input
+            id="dateOfBirth"
+            type="date"
+            value={formData.dateOfBirth}
+            onChange={handleChange}
+            className="w-full px-4 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-black outline-none"
+          />
+        </div>
 
-          {/* Gender */}
-          <div>
-            <label className="block text-gray-700 font-medium mb-1" htmlFor="gender">
-              Gender
-            </label>
-            <select
-              id="gender"
-              className="w-full px-4 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-black outline-none"
-            >
-              <option value="">Select gender</option>
-              <option value="female">Female</option>
-              <option value="male">Male</option>
-              <option value="non-binary">Non-binary</option>
-              <option value="prefer-not-say">Prefer not to say</option>
-            </select>
-          </div>
+        {/* Instagram */}
+        <div>
+          <label htmlFor="instagram" className="block text-gray-700 font-medium mb-1">
+            Instagram Username
+          </label>
+          <input
+            id="instagram"
+            type="text"
+            value={formData.instagram}
+            onChange={handleChange}
+            className="w-full px-4 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-black outline-none"
+            placeholder="@yourusername"
+          />
+        </div>
 
-          {/* Goals */}
-          <div>
-            <label className="block text-gray-700 font-medium mb-1" htmlFor="message">
-              What are your goals?
-            </label>
-            <textarea
-              id="message"
-              rows="4"
-              className="w-full px-4 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-black outline-none"
-              placeholder="Tell us what you're looking for..."
-            />
-          </div>
-
-          <button
-            type="submit"
-            className="bg-black text-white px-6 py-3 rounded-xl hover:bg-gray-800 transition w-full"
+        {/* Gender */}
+        <div>
+          <label htmlFor="gender" className="block text-gray-700 font-medium mb-1">
+            Gender
+          </label>
+          <select
+            id="gender"
+            value={formData.gender}
+            onChange={handleChange}
+            className="w-full px-4 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-black outline-none"
           >
-            Request Free Consultation
-          </button>
-        </form>
-      </div>
+            <option value="">Select gender</option>
+            <option value="female">Female</option>
+            <option value="male">Male</option>
+            <option value="other">Other</option>
+            
+          </select>
+        </div>
+
+        {/* Goals */}
+        <div>
+          <label htmlFor="goals" className="block text-gray-700 font-medium mb-1">
+            What are your goals?
+          </label>
+          <textarea
+            id="goals"
+            rows="4"
+            value={formData.goals}
+            onChange={handleChange}
+            className="w-full px-4 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-black outline-none"
+            placeholder="Tell us what you're looking for..."
+          />
+        </div>
+
+        <button
+          type="submit"
+          className="bg-black text-white px-6 py-3 rounded-xl hover:bg-gray-800 transition w-full"
+        >
+          Request Free Consultation
+        </button>
+      </form>
+    </div>
     </div>
   );
 };
