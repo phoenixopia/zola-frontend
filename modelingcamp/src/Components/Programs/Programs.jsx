@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
-
+import CreatePro from "../../Admin/AdminPages/createpro";
+import { useNavigate } from "react-router-dom";
 
 const Programs = () => {
-
+  const [programs, setPrograms] = useState([]);
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -13,8 +14,22 @@ const Programs = () => {
     gender: "",
     goals: "",
   });
-
   const [message, setMessage] = useState("");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchPrograms = async () => {
+      try {
+        const res = await axios.get("http://localhost:5000/api/programs");
+        setPrograms(res.data);
+      } catch (err) {
+        console.error("Error fetching programs", err);
+      }
+    };
+
+    fetchPrograms();
+  }, []); // Empty dependency means run once on page load
+
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -23,7 +38,7 @@ const Programs = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:5000/api/consultations", formData);
+      await axios.post("http://localhost:5000/api/consultations", formData);
       setMessage("Submitted successfully!");
       setFormData({
         fullName: "",
@@ -35,45 +50,32 @@ const Programs = () => {
         goals: "",
       });
     } catch (err) {
-      console.error(err);      
-      console.log(err);
+      console.error(err);  
       setMessage("Submission failed. Try again.");
     }
   };
-
-
 
   return (
     <div id="programs" className="max-w-6xl mx-auto px-4 py-12">
       <h2 className="text-3xl font-bold text-center mb-10">Our Modeling Programs</h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-        {/* Program 1 */}
-        <div className="bg-white rounded-2xl shadow-lg p-6">
-          <h3 className="text-xl font-semibold mb-2">Fashion Modeling</h3>
-          <p className="mb-4 text-gray-600">
-            Learn the fundamentals of fashion modeling, posing techniques, and
-            build confidence in front of the camera.
-          </p>
-          <button className="bg-black text-white px-5 py-2 rounded-xl hover:bg-gray-800 transition">
-            View Program
-          </button>
-        </div>
 
-        {/* Program 2 */}
-        <div className="bg-white rounded-2xl shadow-lg p-6">
-          <h3 className="text-xl font-semibold mb-2">Runway Coaching</h3>
-          <p className="mb-4 text-gray-600">
-            Master your runway walk, posture, and presence with professional
-            coaching tailored to all levels.
-          </p>
-          <button className="bg-black text-white px-5 py-2 rounded-xl hover:bg-gray-800 transition">
-            View Program
-          </button>
-        </div>
+      {/* Display Programs */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+        {programs.map((program) => (
+          <div key={program._id} className="bg-white rounded-2xl shadow-lg p-6">
+            <h3 className="text-xl font-semibold mb-2">{program.title}</h3>
+            <p className="mb-4 text-gray-600">{program.description}</p>
+            <button 
+            onClick={() => navigate(`/program/${program._id}`)}
+            className="bg-black text-white px-5 py-2 rounded-xl hover:bg-gray-800 transition">
+              View Program
+            </button>
+          </div>
+        ))}
       </div>
 
-      {/* Consultation Form */}
+       {/* Consultation Form */}
       <div className="bg-gray-100 rounded-2xl p-8 shadow-lg">
       <h2 className="text-2xl font-semibold text-center mb-6">
         Fill out the form below for a free 1:1 consultation to see if you're a good fit
@@ -201,7 +203,7 @@ const Programs = () => {
           Request Free Consultation
         </button>
       </form>
-    </div>
+      </div>
     </div>
   );
 };

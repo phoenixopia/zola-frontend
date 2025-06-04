@@ -9,6 +9,8 @@ import Navbar from "./Components/Navbar/Navbar";
 import ShotsPicture from "./Components/ShotsPicture/ShotsPicture";
 import MissionAndVision from "./Components/MissionAndVision/MissionAndVision";
 import Footer from "./Components/Footer/Footer";
+import Viewprogram from './Components/Viewprogram/Viewprogram';
+import RegisterUser from './Components/RegisterUser/RegisterUser';
 
 // Admin components
 import AdminLogin from './Admin/AdminLogin'; 
@@ -45,6 +47,8 @@ function App() {
       <Routes>
         {/* Main site routes */}
         <Route path="/" element={<MainLayout />} />
+        <Route path="/program/:id" element={<Viewprogram />} />
+        <Route path='/register' element={< RegisterUser />} />
 
         {/* Admin login */}
         <Route path="/admin/login" element={<AdminLogin />} />

@@ -5,11 +5,12 @@ export default function AdminDashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const navigate = useNavigate();
 
-  const logout = () => {
-    localStorage.removeItem('isAdmin');
-    navigate('/admin/login');
+   const logout = () => {
+    localStorage.removeItem('adminToken'); // Remove token from localStorage
+    alert('You have been logged out.');
+    navigate('/admin/login'); // Redirect to login page
   };
-
+  
   return (
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar */}
