@@ -41,16 +41,16 @@ const RegisterUser = () => {
 
 
   return (
-    <div className="bg-gray-100 rounded-2xl p-8 shadow-lg">
+    <div className="bg-[#10131a] rounded-2xl p-8 shadow-lg">
 
          <Link
         to="/"  // Or whatever your route is for the programs list
-        className="inline-block mb-6 text-violet-600 hover:text-violet-800 font-semibold"
+        className="inline-block mb-6 text-blue-500 hover:text-violet-800 font-semibold"
       >
         &larr; Go Back 
       </Link>
 
-      <h2 className="text-2xl font-semibold text-center mb-6">
+      <h2 className="text-2xl text-white font-semibold text-center mb-6">
         Fill out the form below for a free 1:1 consultation to see if you're a good fit
       </h2>
 
@@ -61,7 +61,7 @@ const RegisterUser = () => {
       <form className="space-y-6 max-w-xl mx-auto" onSubmit={handleSubmit}>
         {/* Full Name */}
         <div>
-          <label htmlFor="fullName" className="block text-gray-700 font-medium mb-1">
+          <label htmlFor="fullName" className="block text-white font-medium mb-1">
             Full Name
           </label>
           <input
@@ -77,7 +77,7 @@ const RegisterUser = () => {
 
         {/* Email */}
         <div>
-          <label htmlFor="email" className="block text-gray-700 font-medium mb-1">
+          <label htmlFor="email" className="block text-white font-medium mb-1">
             Email Address
           </label>
           <input
@@ -93,7 +93,7 @@ const RegisterUser = () => {
 
         {/* Phone */}
         <div>
-          <label htmlFor="phone" className="block text-gray-700 font-medium mb-1">
+          <label htmlFor="phone" className="block text-white font-medium mb-1">
             Phone Number
           </label>
           <input
@@ -108,7 +108,7 @@ const RegisterUser = () => {
 
         {/* Date of Birth */}
         <div>
-          <label htmlFor="dateOfBirth" className="block text-gray-700 font-medium mb-1">
+          <label htmlFor="dateOfBirth" className="block text-white font-medium mb-1">
             Date of Birth
           </label>
           <input
@@ -122,7 +122,7 @@ const RegisterUser = () => {
 
         {/* Instagram */}
         <div>
-          <label htmlFor="instagram" className="block text-gray-700 font-medium mb-1">
+          <label htmlFor="instagram" className="block text-white font-medium mb-1">
             Instagram Username
           </label>
           <input
@@ -137,7 +137,7 @@ const RegisterUser = () => {
 
         {/* Gender */}
         <div>
-          <label htmlFor="gender" className="block text-gray-700 font-medium mb-1">
+          <label htmlFor="gender" className="block text-white font-medium mb-1">
             Gender
           </label>
           <select
@@ -156,7 +156,7 @@ const RegisterUser = () => {
 
         {/* Goals */}
         <div>
-          <label htmlFor="goals" className="block text-gray-700 font-medium mb-1">
+          <label htmlFor="goals" className="block text-white font-medium mb-1">
             What are your goals?
           </label>
           <textarea

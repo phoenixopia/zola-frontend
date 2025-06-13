@@ -1,16 +1,17 @@
-import { useState ,React } from 'react';
+import React, { useState } from 'react';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
+import { FaTachometerAlt, FaUsers, FaUserAlt, FaChalkboardTeacher, FaQuoteRight, FaSignOutAlt, FaTimes } from 'react-icons/fa';
 
 export default function AdminDashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const navigate = useNavigate();
 
-   const logout = () => {
-    localStorage.removeItem('adminToken'); // Remove token from localStorage
+  const logout = () => {
+    localStorage.removeItem('adminToken');
     alert('You have been logged out.');
-    navigate('/admin/login'); // Redirect to login page
+    navigate('/admin/login');
   };
-  
+
   return (
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar */}
@@ -19,47 +20,51 @@ export default function AdminDashboard() {
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         } transition-transform duration-300 ease-in-out md:translate-x-0 md:static md:inset-auto`}
       >
-        <div className="p-6">
-          <h1 className="text-2xl font-bold mb-6">Admin Panel</h1>
-          <nav className="flex flex-col space-y-4">
-            <Link
-              to="/admin/dashboard"
-              className="text-gray-700 hover:text-blue-600 font-semibold"
-            >
-              Dashboard
-            </Link>
-            <Link
-              to="/admin/users"
-              className="text-gray-700 hover:text-blue-600 font-semibold"
-            >
-              Registerd Users
-            </Link>
-            <Link
-              to="/admin/models"
-              className="text-gray-700 hover:text-blue-600 font-semibold"
-            >
-              Models
-            </Link>
-          <Link
-              to="/admin/createprogram"
-              className="text-gray-700 hover:text-blue-600 font-semibold"
-            >
-              Programs
-            </Link>
+        <div className="p-6 relative">
+          {/* Close icon for mobile */}
+          <button
+            onClick={() => setSidebarOpen(false)}
+            className="md:hidden absolute top-4 right-4 text-gray-600 hover:text-red-500"
+          >
+            <FaTimes size={20} />
+          </button>
 
+          <h1 className="text-2xl font-bold mb-6">Admin Panel</h1>
+          <nav className="flex flex-col space-y-4 text-[16px]">
+            <Link to="/admin/dashboard" className="flex items-center space-x-2 text-gray-700 hover:text-blue-600 font-semibold">
+              <FaTachometerAlt />
+              <span>Dashboard</span>
+            </Link>
+            <Link to="/admin/users" className="flex items-center space-x-2 text-gray-700 hover:text-blue-600 font-semibold">
+              <FaUsers />
+              <span>Registered Users</span>
+            </Link>
+            <Link to="/admin/models" className="flex items-center space-x-2 text-gray-700 hover:text-blue-600 font-semibold">
+              <FaUserAlt />
+              <span>Models</span>
+            </Link>
+            <Link to="/admin/createprogram" className="flex items-center space-x-2 text-gray-700 hover:text-blue-600 font-semibold">
+              <FaChalkboardTeacher />
+              <span>Programs</span>
+            </Link>
+            <Link to="/admin/testimonials" className="flex items-center space-x-2 text-gray-700 hover:text-blue-600 font-semibold">
+              <FaQuoteRight />
+              <span>Testimonials</span>
+            </Link>
             <button
               onClick={logout}
-              className="mt-6 bg-red-500 text-white p-2 rounded hover:bg-red-600"
+              className="flex items-center space-x-2 mt-6 bg-red-500 text-white p-2 rounded hover:bg-red-600"
             >
-              Logout
+              <FaSignOutAlt />
+              <span>Logout</span>
             </button>
           </nav>
         </div>
       </div>
 
-      {/* Content area */}
+      {/* Content Area */}
       <div className="flex-1 flex flex-col">
-        {/* Top bar */}
+        {/* Top bar for mobile */}
         <header className="flex items-center justify-between bg-white shadow-md p-4 md:hidden">
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
@@ -73,11 +78,7 @@ export default function AdminDashboard() {
               strokeWidth="2"
               viewBox="0 0 24 24"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M4 6h16M4 12h16M4 18h16"
-              />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
             </svg>
           </button>
           <h2 className="font-semibold text-lg">Admin Dashboard</h2>

@@ -1,60 +1,69 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
 const Models = () => {
   const [models, setModels] = useState([]);
   const [search, setSearch] = useState("");
+  const [selectedModel, setSelectedModel] = useState(null);
   const [newModel, setNewModel] = useState({
     name: "",
     description: "",
     image: null,
   });
-  const [selectedModel, setSelectedModel] = useState(null);
 
-  // Handle form submit
-  const handlePost = (e) => {
-    e.preventDefault();
-
-    const modelWithId = {
-      ...newModel,
-      id: Date.now().toString(),
-    };
-
-    setModels([...models, modelWithId]);
-    setNewModel({ name: "", description: "", image: null });
-  };
-
-  // Handle image upload and convert to base64
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setNewModel((prev) => ({ ...prev, image: reader.result }));
-      };
-      reader.readAsDataURL(file);
+  const fetchModels = async () => {
+    try {
+      const res = await axios.get("http://localhost:5000/api/models");
+      setModels(res.data);
+    } catch (err) {
+      console.error("Error fetching models:", err.message);
     }
   };
 
-  // Filtered list
+  useEffect(() => {
+    fetchModels();
+  }, []);
+
+  const handlePost = async (e) => {
+    e.preventDefault();
+    try {
+      const formData = new FormData();
+      formData.append("name", newModel.name);
+      formData.append("description", newModel.description);
+      formData.append("image", newModel.image);
+
+      await axios.post("http://localhost:5000/api/models", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      setNewModel({ name: "", description: "", image: null });
+      fetchModels();
+    } catch (err) {
+      console.error("Error uploading model:", err.response?.data || err.message);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`http://localhost:5000/api/models/${id}`);
+      fetchModels();
+    } catch (err) {
+      console.error("Error deleting model:", err.message);
+    }
+  };
+
+
   const filteredModels = models.filter((model) =>
     model.name.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
     <div className="p-6 space-y-6 max-w-3xl mx-auto">
-      <h1 className="text-2xl font-bold">Models</h1>
+      <h1 className="text-2xl font-bold text-center">Model Management</h1>
 
-      {/* Search */}
-      <input
-        type="text"
-        placeholder="Search models..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        className="border p-2 w-full rounded-md"
-      />
-
-      {/* Add Model Form */}
-      <form onSubmit={handlePost} className="space-y-4">
+      {/* Upload Form */}
+      <form onSubmit={handlePost} className="space-y-4 border p-4 rounded-md bg-gray-50">
+        <h2 className="text-xl font-semibold">Upload New Model</h2>
         <input
           type="text"
           placeholder="Model name"
@@ -66,16 +75,14 @@ const Models = () => {
         <textarea
           placeholder="Model description"
           value={newModel.description}
-          onChange={(e) =>
-            setNewModel({ ...newModel, description: e.target.value })
-          }
+          onChange={(e) => setNewModel({ ...newModel, description: e.target.value })}
           className="border p-2 w-full rounded-md"
           required
         />
         <input
           type="file"
           accept="image/*"
-          onChange={handleImageChange}
+          onChange={(e) => setNewModel({ ...newModel, image: e.target.files[0] })}
           className="w-full"
           required
         />
@@ -83,54 +90,53 @@ const Models = () => {
           type="submit"
           className="bg-blue-600 text-white px-4 py-2 rounded-md"
         >
-          Add Model
+          Upload Model
         </button>
       </form>
+
+      {/* Search */}
+      <input
+        type="text"
+        placeholder="Search models..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        className="border px-3 py-2 w-full rounded-md"
+      />
 
       {/* Model List */}
       <ul className="space-y-2">
         {filteredModels.map((model) => (
           <li
-            key={model.id}
-            onClick={() => setSelectedModel(model)}
-            className="cursor-pointer border p-3 rounded-md hover:bg-gray-100 flex items-center gap-4"
+            key={model._id}
+            className="border p-3 rounded-md bg-white hover:bg-gray-50 flex items-center justify-between"
           >
-            {model.image && (
-              <img
-                src={model.image}
-                alt={model.name}
-                className="w-16 h-16 object-cover rounded"
-              />
-            )}
-            <div>
-              <h2 className="text-lg font-semibold">{model.name}</h2>
-              <p className="text-sm text-gray-600 truncate">
-                {model.description}
-              </p>
+            <div
+              className="flex items-center gap-4 cursor-pointer flex-1"
+            >
+              {model.imageUrl && (
+                <img
+                  src={`http://localhost:5000/${model.imageUrl}`}
+                  alt={model.name}
+                  className="w-16 h-16 object-cover rounded"
+                />
+              )}
+              <div>
+                <h2 className="text-lg font-semibold">{model.name}</h2>
+                <p className="text-sm text-gray-600 truncate">{model.description}</p>
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <button
+                onClick={() => handleDelete(model._id)}
+                className="bg-red-500 text-white px-3 py-1 rounded-md"
+              >
+                Delete
+              </button>
             </div>
           </li>
         ))}
       </ul>
 
-      {/* Detail View */}
-      {selectedModel && (
-        <div className="mt-6 border-t pt-4">
-          <h3 className="text-xl font-bold mb-2">Model Details</h3>
-          {selectedModel.image && (
-            <img
-              src={selectedModel.image}
-              alt={selectedModel.name}
-              className="w-48 h-48 object-cover rounded mb-4"
-            />
-          )}
-          <p>
-            <strong>Name:</strong> {selectedModel.name}
-          </p>
-          <p>
-            <strong>Description:</strong> {selectedModel.description}
-          </p>
-        </div>
-      )}
     </div>
   );
 };

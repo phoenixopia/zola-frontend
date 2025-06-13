@@ -4,13 +4,15 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import About from "./Components/About/About";
 import Programs from "./Components/Programs/Programs";
 import ContactForm from "./Components/ContactForm/ContactForm";
-import Home from "./Components/Home/Home";
-import Navbar from "./Components/Navbar/Navbar";
 import ShotsPicture from "./Components/ShotsPicture/ShotsPicture";
-import MissionAndVision from "./Components/MissionAndVision/MissionAndVision";
 import Footer from "./Components/Footer/Footer";
 import Viewprogram from './Components/Viewprogram/Viewprogram';
 import RegisterUser from './Components/RegisterUser/RegisterUser';
+import TestimonialList from './Components/TestimonialList/TestimonialList';
+import TestimonialForm from './Components/TestimonialList/TestmonialForm';
+import TeamProfile from './Components/TeamProfile/TeamProfile';
+import HomeWithNavbar from './Components/HomeWithNavbar/HomeWithNavbar';
+import VirtualRunway from './Components/VirtualRunway/VirtualRunway';
 
 // Admin components
 import AdminLogin from './Admin/AdminLogin'; 
@@ -19,6 +21,8 @@ import Dashboard from './Admin/AdminPages/Dashboard';
 import Users from './Admin/AdminPages/Users';
 import Models from './Admin/AdminPages/Models';
 import CreatePro from './Admin/AdminPages/CreatePro';
+import Testimonials from './Admin/AdminPages/Testimonials';
+
 
 // Admin auth check wrapper
 function RequireAdmin({ children }) {
@@ -28,13 +32,13 @@ function RequireAdmin({ children }) {
 
 function MainLayout() {
   return (
-    <div className="bg-black bg-opacity-30 h-auto w-full overflow-hidden">
-      <Navbar />
-      <Home />
+    <div className="bg-[#10131a] h-auto w-full overflow-hidden">
+  <HomeWithNavbar />
       <About />
       <Programs />
+      < VirtualRunway/>
       <ShotsPicture />
-      <MissionAndVision />
+      <TestimonialList />
       <ContactForm />
       <Footer />
     </div>
@@ -49,7 +53,9 @@ function App() {
         <Route path="/" element={<MainLayout />} />
         <Route path="/program/:id" element={<Viewprogram />} />
         <Route path='/register' element={< RegisterUser />} />
-
+        <Route path='/rateform' element={< TestimonialForm />} />
+        <Route path='/team' element={< TeamProfile />} />
+        <Route path="/hm" element={<HomeWithNavbar />} />
         {/* Admin login */}
         <Route path="/admin/login" element={<AdminLogin />} />
 
@@ -67,6 +73,7 @@ function App() {
           <Route path="users" element={<Users />} />
           <Route path="models" element={<Models />} />
           <Route path="createprogram" element={<CreatePro />} />
+          <Route path="testimonials" element={<Testimonials />} />
         </Route>
 
         {/* Catch all: redirect unknown admin routes to login */}

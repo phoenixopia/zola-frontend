@@ -67,7 +67,7 @@ function Users() {
                     href={`https://mail.google.com/mail/?view=cm&fs=1&to=${c.email}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="bg-blue-500 hover:bg-blue-600 text-white py-1 px-3 rounded"
+                    className="bg-blue-500 hover:bg-blue-500 text-white py-1 px-3 rounded"
                   >
                     contact
                   </a>
