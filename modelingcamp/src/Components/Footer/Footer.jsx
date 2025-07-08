@@ -1,10 +1,9 @@
 import React from "react";
 import {
   FaFacebookF,
-  FaTwitter,
   FaInstagram,
-  FaLinkedinIn,
 } from "react-icons/fa";
+import { SiTiktok } from "react-icons/si";
 
 const Footer = () => {
   return (
@@ -33,9 +32,9 @@ const Footer = () => {
         <div>
           <h3 className="text-white font-semibold mb-3">Contact Us</h3>
           <ul className="space-y-2 text-sm">
-            <li>Email: info@Zola.com</li>
-            <li>Phone: (058) 456-7890</li>
-            <li>Address: Megenagna ,sitiMall, 8thfloor</li>
+            <li>Email: Zolamodelingandartschool@gmail.com</li>
+            <li>Phone: +2519 42825584</li>
+            <li>Address: Megenagna city mall 8th Floor  </li>
           </ul>
         </div>
 
@@ -43,10 +42,11 @@ const Footer = () => {
         <div>
           <h3 className="text-white font-semibold mb-3">Follow Us</h3>
           <div className="flex space-x-4 mt-2">
-            <a href="#" className="hover:text-white transition"><FaFacebookF /></a>
-            <a href="#" className="hover:text-white transition"><FaTwitter /></a>
-            <a href="#" className="hover:text-white transition"><FaInstagram /></a>
-            <a href="#" className="hover:text-white transition"><FaLinkedinIn /></a>
+            <a href="https://www.facebook.com/profile.php?id=6155029435461" className="hover:text-white transition"><FaFacebookF /></a>
+            <a href="https://www.instagram.com/official.model.zola?igsh=MWFyZDFnOGN4d2kwOQ==" className="hover:text-white transition"><FaInstagram /></a>
+            <a href="https://www.tiktok.com/@zolamodelingschool?_t=ZM-8xr5YOwcu2v&_r=1" target="_blank" rel="noopener noreferrer" className="hover:text-white transition">
+  <SiTiktok />
+</a>
           </div>
         </div>
       </div>
@@ -55,9 +55,11 @@ const Footer = () => {
       <div className="border-t border-gray-700 my-6"></div>
 
       {/* Bottom */}
-      <div className="text-center text-sm text-white">
-        &copy; {new Date().getFullYear()} Zola Modeling. All rights reserved.
-      </div>
+<div className="text-center text-sm text-white">
+  &copy; {new Date().getFullYear()} Zola Modeling. All rights reserved. |{' '}
+  <span style={{ color: '#FFD700', fontWeight: 'bold' }}>Powered by Phoenixopia Solution</span>
+</div>
+
     </footer>
   );
 };

@@ -1,13 +1,13 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import CountUp from "react-countup";
+import axios from "axios";
 import { Star, Heart, Users } from "lucide-react";
 
 const milestones = [
-  { year: "2015", title: "Founded", description: "Zola Modeling School was born." },
-  { year: "2017", title: "First International Show", description: "Debuted in South Africa." },
-  { year: "2020", title: "Launched Art Programs", description: "Expanded to fine arts and choreography." },
-  { year: "2023", title: "Opened 3rd Branch", description: "Now in Addis Ababa, Bahir Dar, and Hawassa." },
+  { year: "2023", title: "Founded", description: "Zola Modeling School was born." },
+  { year: "2024", title: "Launched model Programs", description: "Expanded to fine arts and choreography." },
+  { year: "2025", title: "Opened 3rd Branch", description: "Now in Addis Ababa and coming soon Hawassa." },
 ];
 
 const values = [
@@ -23,9 +23,37 @@ const stats = [
 ];
 
 const About = () => {
+  const [videoUrl, setVideoUrl] = useState("");
+
+  useEffect(() => {
+    const fetchVideo = async () => {
+      try {
+        const res = await axios.get("http://localhost:5000/api/settings");
+        const settings = res.data;
+        const videos = settings.filter(item => item.type === "video");
+        if (videos.length > 0) {
+          setVideoUrl(videos[0].videoUrl);
+        }
+      } catch (err) {
+        console.error("Failed to fetch video:", err);
+      }
+    };
+
+    fetchVideo();
+  }, []);
+
+  const convertToEmbedUrl = (url) => {
+    let videoId = null;
+    const standardMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]+)/);
+    const shortsMatch = url.match(/youtube\.com\/shorts\/([\w-]+)/);
+    if (standardMatch) videoId = standardMatch[1];
+    else if (shortsMatch) videoId = shortsMatch[1];
+    return videoId ? `https://www.youtube.com/embed/${videoId}` : url;
+  };
+
   return (
     <section id="about">
-      {/* New White Description Section */}
+      {/* White Description Section */}
       <div className="relative bg-white overflow-hidden px-6 py-12 md:py-16 text-center">
         <p className="text-lg md:text-xl font-semibold text-[#0a0a23] max-w-4xl mx-auto leading-relaxed">
           At Zola Modeling, we’re more than a development modeling agency – we’re a launchpad for aspiring models to transform their dreams into reality. Our advanced workshops, intensive training programs, confidence classes, and step-by-step action plans provide the foundation for a successful modeling career. With a strong emphasis on education, safety, and well-being, we set a new standard in the industry, equipping you with everything you need to succeed in the world of modeling.
@@ -34,7 +62,6 @@ const About = () => {
 
       {/* Advanced Section */}
       <div className="bg-[#10131a] text-white px-6 py-12">
-        {/* Title */}
         <motion.h2
           initial={{ opacity: 0, y: -30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -54,9 +81,7 @@ const About = () => {
           >
             <h3 className="text-2xl font-semibold text-blue-400 mb-2">Our Mission</h3>
             <p>
-              Our mission is to become the leading school of modeling and art education in Ethiopia by 2030, 
-            fostering creativity and innovation while preparing students for successful careers. 
-            We aim to cultivate cultural pride and ensure our students are competitive at a global level.
+              Our mission is to become the leading school of modeling and art education in Ethiopia by 2030, fostering creativity and innovation while preparing students for successful careers. We aim to cultivate cultural pride and ensure our students are competitive at a global level.
             </p>
           </motion.div>
 
@@ -68,8 +93,7 @@ const About = () => {
           >
             <h3 className="text-2xl font-semibold text-orange-300 mb-2">Our Vision</h3>
             <p>
-               Our vision is to provide comprehensive and engaging education in modeling and art, 
-            equipping students with the skills, knowledge, and confidence to thrive in their chosen careers.
+              Our vision is to provide comprehensive and engaging education in modeling and art, equipping students with the skills, knowledge, and confidence to thrive in their chosen careers.
             </p>
           </motion.div>
         </div>
@@ -144,10 +168,26 @@ const About = () => {
         {/* Video Intro */}
         <div className="max-w-3xl mx-auto">
           <h3 className="text-2xl font-bold text-center text-orange-300 mb-4">Watch Our Story</h3>
-          <video controls className="w-full rounded-xl shadow-lg">
-            <source src="/videos/intro.mp4" type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
+          {videoUrl ? (
+            videoUrl.includes("youtube.com") || videoUrl.includes("youtu.be") ? (
+              <div className="aspect-w-16 aspect-h-9">
+                <iframe
+                  src={convertToEmbedUrl(videoUrl)}
+                  title="About Video"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  className="w-full h-72 rounded-xl shadow-lg"
+                />
+              </div>
+            ) : (
+              <video controls className="w-full rounded-xl shadow-lg">
+                <source src={videoUrl} type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+            )
+          ) : (
+            <p className="text-center text-gray-300">No video available.</p>
+          )}
         </div>
       </div>
     </section>

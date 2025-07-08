@@ -21,3 +21,18 @@ export const createConsultation = async (req, res) => {
   }
 };
 
+
+// Delete a consultation by ID
+export const deleteConsultation = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const deleted = await Consultation.findByIdAndDelete(id);
+    if (!deleted) {
+      return res.status(404).json({ message: 'Consultation not found' });
+    }
+    res.json({ message: 'Consultation deleted successfully' });
+  } catch (error) {
+    console.error('Delete error:', error.message);
+    res.status(500).json({ message: 'Server error' });
+  }
+};

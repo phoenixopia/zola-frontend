@@ -1,6 +1,16 @@
 import React, { useState } from 'react';
-import { Link, Outlet, useNavigate } from 'react-router-dom';
-import { FaTachometerAlt, FaUsers, FaUserAlt, FaChalkboardTeacher, FaQuoteRight, FaSignOutAlt, FaTimes } from 'react-icons/fa';
+import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import {
+  FaTachometerAlt,
+  FaUsers,
+  FaUserAlt,
+  FaChalkboardTeacher,
+  FaQuoteRight,
+  FaSignOutAlt,
+  FaTimes,
+  FaCog,
+  FaBars,
+} from 'react-icons/fa';
 
 export default function AdminDashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -16,44 +26,56 @@ export default function AdminDashboard() {
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar */}
       <div
-        className={`fixed z-30 inset-y-0 left-0 w-64 bg-white shadow-md transform ${
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        } transition-transform duration-300 ease-in-out md:translate-x-0 md:static md:inset-auto`}
+        className={`fixed inset-y-0 left-0 z-40 w-64 bg-white shadow-md transform transition-transform duration-300 ease-in-out
+          ${
+            sidebarOpen
+              ? 'translate-x-0'
+              : '-translate-x-full'
+          } md:translate-x-0 md:static md:inset-auto`}
       >
-        <div className="p-6 relative">
+        <div className="p-6 relative h-full flex flex-col">
           {/* Close icon for mobile */}
           <button
             onClick={() => setSidebarOpen(false)}
             className="md:hidden absolute top-4 right-4 text-gray-600 hover:text-red-500"
+            aria-label="Close sidebar"
           >
-            <FaTimes size={20} />
+            <FaTimes size={24} />
           </button>
 
-          <h1 className="text-2xl font-bold mb-6">Admin Panel</h1>
-          <nav className="flex flex-col space-y-4 text-[16px]">
-            <Link to="/admin/dashboard" className="flex items-center space-x-2 text-gray-700 hover:text-blue-600 font-semibold">
-              <FaTachometerAlt />
-              <span>Dashboard</span>
-            </Link>
-            <Link to="/admin/users" className="flex items-center space-x-2 text-gray-700 hover:text-blue-600 font-semibold">
-              <FaUsers />
-              <span>Registered Users</span>
-            </Link>
-            <Link to="/admin/models" className="flex items-center space-x-2 text-gray-700 hover:text-blue-600 font-semibold">
-              <FaUserAlt />
-              <span>Models</span>
-            </Link>
-            <Link to="/admin/createprogram" className="flex items-center space-x-2 text-gray-700 hover:text-blue-600 font-semibold">
-              <FaChalkboardTeacher />
-              <span>Programs</span>
-            </Link>
-            <Link to="/admin/testimonials" className="flex items-center space-x-2 text-gray-700 hover:text-blue-600 font-semibold">
-              <FaQuoteRight />
-              <span>Testimonials</span>
-            </Link>
+          <h1 className="text-3xl sm:text-4xl font-extrabold mb-8 text-gray-900 dark:text-gray-100 tracking-tight drop-shadow-md">
+            Admin
+          </h1>
+
+          <nav className="flex flex-col space-y-4 text-[16px] flex-grow">
+            {[
+              { to: '/admin/dashboard', icon: <FaTachometerAlt />, label: 'Dashboard' },
+              { to: '/admin/users', icon: <FaUsers />, label: 'Registered Users' },
+              { to: '/admin/models', icon: <FaUserAlt />, label: 'Models' },
+              { to: '/admin/createprogram', icon: <FaChalkboardTeacher />, label: 'Programs' },
+              { to: '/admin/testimonials', icon: <FaQuoteRight />, label: 'Testimonials' },
+              { to: '/admin/settings', icon: <FaCog />, label: 'Settings' },
+            ].map(({ to, icon, label }) => (
+              <NavLink
+                key={to}
+                to={to}
+                className={({ isActive }) =>
+                  `flex items-center space-x-2 font-semibold px-2 rounded-md ${
+                    isActive
+                      ? 'text-blue-600 font-bold bg-blue-100'
+                      : 'text-gray-700 hover:text-blue-600'
+                  }`
+                }
+                onClick={() => setSidebarOpen(false)} // close sidebar on link click (mobile)
+              >
+                {icon}
+                <span>{label}</span>
+              </NavLink>
+            ))}
+
             <button
               onClick={logout}
-              className="flex items-center space-x-2 mt-6 bg-red-500 text-white p-2 rounded hover:bg-red-600"
+              className="flex items-center space-x-2 mt-auto bg-red-500 text-white p-2 rounded hover:bg-red-600"
             >
               <FaSignOutAlt />
               <span>Logout</span>
@@ -67,26 +89,18 @@ export default function AdminDashboard() {
         {/* Top bar for mobile */}
         <header className="flex items-center justify-between bg-white shadow-md p-4 md:hidden">
           <button
-            onClick={() => setSidebarOpen(!sidebarOpen)}
+            onClick={() => setSidebarOpen(true)}
             className="text-gray-700 focus:outline-none"
+            aria-label="Open sidebar"
           >
-            {/* Hamburger icon */}
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              viewBox="0 0 24 24"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
+            <FaBars size={24} />
           </button>
           <h2 className="font-semibold text-lg">Admin Dashboard</h2>
-          <div></div>
+          <div style={{ width: 24 }} /> {/* placeholder for symmetry */}
         </header>
 
         {/* Main content */}
-        <main className="flex-1 overflow-auto p-6">
+        <main className="flex-1 overflow-auto p-6">       
           <Outlet />
         </main>
       </div>

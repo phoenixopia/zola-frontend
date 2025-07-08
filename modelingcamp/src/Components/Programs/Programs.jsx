@@ -38,30 +38,7 @@ const Programs = () => {
     fetchPrograms();
   }, []);
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.id]: e.target.value });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      await axios.post("http://localhost:5000/api/consultations", formData);
-      setMessage("Submitted successfully!");
-      setFormData({
-        fullName: "",
-        email: "",
-        phone: "",
-        dateOfBirth: "",
-        instagram: "",
-        gender: "",
-        goals: "",
-      });
-    } catch (err) {
-      console.error(err);
-      setMessage("Submission failed. Try again.");
-    }
-  };
-
+ 
   return (
     <div id="programs" className="max-w-6xl mx-auto px-4 py-12">
       <motion.h2

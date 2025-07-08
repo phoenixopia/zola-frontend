@@ -9,20 +9,19 @@ export default function AdminLogin() {
 
 
    const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const res = await axios.post("http://localhost:5000/api/admin/login", {
-        email,
-        password
-      });
-      localStorage.setItem('adminToken', res.data.token);
-      alert('Login successful!');
-      navigate('/admin/dashboard');
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
+  e.preventDefault();
+  try {
+    const res = await axios.post("http://localhost:5000/api/admin/login", 
+      { email, password },
+      { withCredentials: true }
+    );
+    localStorage.setItem('adminToken', res.data.token);
+    alert('Login successful!');
+    navigate('/admin/dashboard');
+  } catch (err) {
+    console.log(err.response?.data || err.message);
+  }
+};
 
 
   return (

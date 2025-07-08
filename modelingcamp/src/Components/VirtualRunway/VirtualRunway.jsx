@@ -1,49 +1,33 @@
 import React, { useState, useEffect, useRef } from "react";
 
-const models = [
-  {
-    id: 1,
-    name: "Anna Smith",
-    image: "/images/Zola.JPG",
-  },
-  {
-    id: 2,
-    name: "David Lee",
-    image: "/images/Zola.JPG",
-  },
-  {
-    id: 3,
-    name: "Maya Chen",
-    image: "/images/Zola.JPG",
-  },
-  {
-    id: 4,
-    name: "Liam Johnson",
-    image: "/images/Zola.JPG",
-  },
-  {
-    id: 5,
-    name: "Sophia Patel",
-    image: "/images/Zola.JPG",
-  },
-];
-
 const VirtualRunway = () => {
-  const [speed, setSpeed] = useState(50); // pixels per second
+  const [models, setModels] = useState([]);
   const [isPaused, setIsPaused] = useState(false);
+  const [offset, setOffset] = useState(0);
+  const [totalWidth, setTotalWidth] = useState(0);
+  const [speed, setSpeed] = useState(40); // made speed stateful
   const containerRef = useRef(null);
   const animationRef = useRef(null);
-  const [offset, setOffset] = useState(0);
-
-  // Total width is calculated after mount
-  const [totalWidth, setTotalWidth] = useState(0);
 
   useEffect(() => {
-    // Calculate total width of the runway content
+    const fetchGallery = async () => {
+      try {
+        const res = await fetch("http://localhost:5000/api/settings");
+        const data = await res.json();
+        setModels(data.filter(item => /\.(jpe?g|png|gif|webp|svg)$/i.test(item.imageUrl)));
+      } catch (err) {
+        console.error("Error fetching gallery:", err);
+      }
+    };
+
+    fetchGallery();
+  }, []);
+
+  useEffect(() => {
     if (containerRef.current) {
       setTotalWidth(containerRef.current.scrollWidth / 2);
     }
-  }, []);
+  }, [models]);
 
   useEffect(() => {
     let lastTimestamp = null;
@@ -51,7 +35,6 @@ const VirtualRunway = () => {
     const step = (timestamp) => {
       if (lastTimestamp !== null && !isPaused) {
         const delta = timestamp - lastTimestamp;
-        // Move offset by speed * delta(ms)/1000 (pixels)
         setOffset((prev) => {
           let nextOffset = prev + (speed * delta) / 1000;
           if (nextOffset > totalWidth) nextOffset -= totalWidth;
@@ -63,112 +46,85 @@ const VirtualRunway = () => {
     };
 
     animationRef.current = requestAnimationFrame(step);
-
     return () => cancelAnimationFrame(animationRef.current);
-  }, [speed, isPaused, totalWidth]);
+  }, [isPaused, totalWidth, speed]);
+
+  const getImageSrc = (url) => {
+    if (!url) return '';
+    if (url.startsWith('http://') || url.startsWith('https://')) return url;
+    return `http://localhost:5000/${url}`;
+  };
 
   return (
     <div
       style={{
         overflow: "hidden",
         width: "100%",
-        border: "2px solid #333",
-        borderRadius: "8px",
-        background: "#111",
-        color: "#fff",
-        padding: "20px 0",
+        padding: "40px 0",
+        background: "linear-gradient(to right, #111, #222)",
         position: "relative",
-        userSelect: "none",
       }}
     >
-      <h2 style={{ textAlign: "center", marginBottom: 20 }}>
-        Gallery
+      <h2 style={{ color: "#fff", textAlign: "center", marginBottom: "20px" }}>
+        Virtual Runway Gallery
       </h2>
 
+      {/* Speed Control Slider */}
+      <div style={{ textAlign: "center", marginBottom: "20px" }}>
+        <label style={{ color: "#fff", marginRight: "10px" }}>Speed: {speed} px/sec</label>
+        <input
+          type="range"
+          min="10"
+          max="200"
+          step="1"
+          value={speed}
+          onChange={(e) => setSpeed(parseInt(e.target.value))}
+          style={{ width: "200px" }}
+        />
+      </div>
+
       <div
-        style={{
-          display: "flex",
-          whiteSpace: "nowrap",
-          transform: `translateX(-${offset}px)`,
-          transition: "transform 0.1s linear",
-        }}
         ref={containerRef}
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
+        style={{
+          display: "flex",
+          transform: `translateX(-${offset}px)`,
+          transition: "transform 0.05s linear",
+        }}
       >
-        {/* Duplicate the models list twice for infinite scroll */}
         {[...models, ...models].map((model, index) => (
           <div
             key={index}
             style={{
-              display: "inline-block",
-              width: 150,
-              marginRight: 40,
-              textAlign: "center",
-              cursor: "pointer",
-              userSelect: "none",
-              filter: isPaused ? "brightness(1)" : "brightness(0.7)",
-              transition: "filter 0.3s ease",
+              flexShrink: 0,
+              marginRight: "40px",
+              borderRadius: "15px",
+              overflow: "hidden",
+              boxShadow: "0 4px 20px rgba(255, 255, 255, 0.15)",
+              transition: "transform 0.3s",
             }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.filter = "brightness(1.2)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.filter = "brightness(0.7)";
-            }}
-            title={model.name}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.transform = "scale(1.03)")
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.transform = "scale(1)")
+            }
           >
             <img
-              src={model.image}
-              alt={model.name}
+              src={getImageSrc(model.imageUrl)}
+              alt="Model"
               style={{
-                width: "100%",
-                borderRadius: "10px",
-                border: "3px solid white",
-                boxShadow: "0 0 15px rgba(255,255,255,0.3)",
+                display: "block",
+                height: "100%",
+                width: "auto",
+                maxHeight: "400px",
+                objectFit: "contain",
+                background: "#000",
               }}
             />
-            <p
-              style={{
-                marginTop: 8,
-                fontWeight: "bold",
-                fontSize: "1rem",
-                userSelect: "text",
-              }}
-            >
-              {model.name}
-            </p>
           </div>
         ))}
-      </div>
-
-      {/* Speed control */}
-      <div
-        style={{
-          position: "absolute",
-          bottom: 10,
-          right: 20,
-          background: "rgba(0,0,0,0.5)",
-          padding: "5px 12px",
-          borderRadius: "20px",
-          display: "flex",
-          alignItems: "center",
-          gap: 10,
-          fontSize: 14,
-        }}
-      >
-        <label htmlFor="speedControl" style={{ color: "#fff" }}>
-          Speed:
-        </label>
-        <input
-          id="speedControl"
-          type="range"
-          min="10"
-          max="200"
-          value={speed}
-          onChange={(e) => setSpeed(Number(e.target.value))}
-          style={{ cursor: "pointer" }}
-        />
       </div>
     </div>
   );

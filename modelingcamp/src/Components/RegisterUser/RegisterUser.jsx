@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
@@ -11,9 +11,25 @@ const RegisterUser = () => {
     instagram: '',
     gender: '',
     goals: '',
+    selectedProgram: '',  // <-- New field for program selection
   });
 
+  const [programs, setPrograms] = useState([]);  // Programs fetched from backend
   const [message, setMessage] = useState('');
+
+  // Fetch programs on component mount
+  useEffect(() => {
+    const fetchPrograms = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/programs');
+        setPrograms(response.data);
+      } catch (err) {
+        console.error('Failed to fetch programs:', err);
+      }
+    };
+
+    fetchPrograms();
+  }, []);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -22,32 +38,31 @@ const RegisterUser = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:5000/api/consultations", formData);
-      setMessage("Submitted successfully!");
+      await axios.post('http://localhost:5000/api/consultations', formData);
+      setMessage('Submitted successfully!');
       setFormData({
-        fullName: "",
-        email: "",
-        phone: "",
-        dateOfBirth: "",
-        instagram: "",
-        gender: "",
-        goals: "",
+        fullName: '',
+        email: '',
+        phone: '',
+        dateOfBirth: '',
+        instagram: '',
+        gender: '',
+        goals: '',
+        selectedProgram: '',
       });
     } catch (err) {
-      console.log(err);
-      setMessage("Submission failed. Try again.");
+      console.error(err);
+      setMessage('Submission failed. Try again.');
     }
   };
 
-
   return (
     <div className="bg-[#10131a] rounded-2xl p-8 shadow-lg">
-
-         <Link
-        to="/"  // Or whatever your route is for the programs list
+      <Link
+        to="/"
         className="inline-block mb-6 text-blue-500 hover:text-violet-800 font-semibold"
       >
-        &larr; Go Back 
+        &larr; Go Back
       </Link>
 
       <h2 className="text-2xl text-white font-semibold text-center mb-6">
@@ -150,7 +165,27 @@ const RegisterUser = () => {
             <option value="female">Female</option>
             <option value="male">Male</option>
             <option value="other">Other</option>
-            
+          </select>
+        </div>
+
+        {/* Select Program */}
+        <div>
+          <label htmlFor="selectedProgram" className="block text-white font-medium mb-1">
+            Select Program
+          </label>
+          <select
+            id="selectedProgram"
+            value={formData.selectedProgram}
+            onChange={handleChange}
+            className="w-full px-4 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-black outline-none"
+            required
+          >
+            <option value="">Select a program</option>
+            {programs.map((program) => (
+              <option key={program._id} value={program.title}>
+                {program.title}
+              </option>
+            ))}
           </select>
         </div>
 

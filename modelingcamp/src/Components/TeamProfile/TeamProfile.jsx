@@ -6,7 +6,6 @@ const teamProfiles = [
   {
     name: "Zelalem Tedla Mesfin",
     title: "General Manager",
-    photo: "/images/Z1.jpg",
     description: `He is a dedicated, self-driven, and passionate model as well as a dynamic event organizer with a strong background in both academia and professional experience. He holds a Bachelor of Arts in Economics from Admas University and two master's degrees—one in Public Financial Management from Oromia State University and another in Transport Planning and Management from Ethiopian Civil Service University. Additionally, he has earned a modeling certificate from Abyssinia Fine Art and Modeling School.
 
 With over a decade of experience in governmental offices, he has developed a strong expertise in planning, monitoring, and evaluation. His professional journey includes significant roles at various esteemed organizations:
@@ -20,7 +19,6 @@ Beyond his governmental work, he has built an impressive three-year career in th
   {
     name: "Tigist Shanbel Yishak",
     title: "Marketing Manager / Coach",
-    photo: "/images/m1.jpg",
     description: `She is a self-motivated journalist, model, and writer. With two years as a radio host at FM Addis 97.1 (EBC) and FM 96.3 under Addis Media Network (AMN), she brought compelling stories to her audience. She also worked in various TV newsroom departments.
 
 She holds a Journalism and International Communication degree from Bahir Dar University and a modeling certificate from Loret Modeling Academy. She was a Top 20 finalist in Miss International Ethiopia 2024 and part of Ethiopian Next Top Model.
@@ -33,13 +31,11 @@ Currently:
   {
     name: "Yohannes Workneh Alemayehu",
     title: "Vocal & Acting Coach",
-    photo: "/images/Z1.jpg",
     description: `A talented model with 2+ years of experience and a Top 5 contestant in Ethiopian Next Top Models 2024. He appeared in fashion shows and TV commercials, and now leads vocal and acting classes at Zola Modeling and Art School, helping students build a strong performance foundation.`
   },
   {
     name: "Abrham Shibeshi Aknaw",
     title: "Registration Officer",
-    photo: "/images/Z1.jpg",
     description: `He is an experienced ICT professional and transport officer with over six years in government service. He holds:
 • BSc in Computer Science (Admas University)
 • BSc in Urban Transport Management (Kotebe Metropolitan University)
@@ -76,11 +72,7 @@ const TeamProfile = () => {
             className="bg-white text-gray-800 p-6 rounded-2xl shadow-lg hover:shadow-2xl transition transform hover:scale-[1.02]"
             layout
           >
-            <img
-              src={member.photo}
-              alt={member.name}
-              className="w-full h-64 object-cover rounded-xl mb-4"
-            />
+            
             <h2 className="text-2xl font-semibold text-blue-600 mb-1">
               {member.name}
             </h2>
